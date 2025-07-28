@@ -27,8 +27,11 @@ import { Report } from './reports/entities/report.entity';
       // entities: [__dirname + '/**/*.entity.js'],
       // This will load all entity files in the directory.
       entities: [User, Report], // Specify your entities here
+      migrations: ['src/migrations/*.ts'],
       autoLoadEntities: true,
-      synchronize: true, // what is synchronize?
+      synchronize: true, // TURN OFF IN PRODUCTION
+      
+      // what is synchronize?
       // synchronize: true means that the database schema will be automatically updated
       // based on the current model definitions. This is useful during development.
       // However, it should be used with caution in production environments.
