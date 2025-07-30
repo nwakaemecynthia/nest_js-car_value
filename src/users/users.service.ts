@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -38,11 +38,24 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto | Partial<CreateUserDto>) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    Object.assign(user, updateUserDto);
+    return this.userRepository.save(user);
+    // Alternatively, you can use the update method directly
+    // to update the user without fetching it first.
+    // return this.userRepository.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return this.userRepository.delete(id);
+  async remove(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return this.userRepository.remove(user);  
+    // return this.userRepository.delete(id);
   }
 }

@@ -9,3 +9,29 @@ Content-Type: application/json
   "firstName": "Cynthia",
   "lastName": "Nwakaeme"
 }
+
+### Get Users
+GET http://localhost:3000/auth/
+Content-Type: application/json
+
+
+### Get User by ID
+GET http://localhost:3000/auth/1
+Content-Type: application/json
+
+### Get User by ID
+GET http://localhost:3000/auth?email=cynthia@example.com
+Content-Type: application/json
+
+### Update User
+PATCH http://localhost:3000/auth/1
+Content-Type: application/json    
+
+{
+  "username": "CynthiaNwakaeme"
+  }
+
+### Delete User
+DELETE http://localhost:3000/auth/ff38e4ce-43c7-4f05-b0ea-30afa2548022
+Content-Type: application/json
+
