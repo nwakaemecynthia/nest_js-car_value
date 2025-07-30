@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException } from '@nestjs/common';
+import { UserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 
 
 @Controller('auth')
+@Serialize(UserDto) // Use the Serialize decorator to apply serialization rules
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -25,9 +27,11 @@ export class UsersController {
   // This will not scale if you have many endpoints that need serialization rules.
   //Hence we will use an interceptor globally or at the module level instead.
   
-  @UseInterceptors(SerializeInterceptor) // Use the SerializeInterceptor to handle serialization
+  // @UseInterceptors(new SerializeInterceptor(UserDto)) // Use the SerializeInterceptor to handle serialization
   //This interceptor will apply serialization rules globally for this controller.
   //It will exclude the password field from the response when fetching user data.
+
+  // @Serialize(UserDto) // Use the Serialize decorator to apply serialization rules(more modern way)
   @Get(':id')
     async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(id);
